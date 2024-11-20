@@ -1,7 +1,7 @@
 <?php
 include 'connection.php';
 
-$select_sql = "SELECT dm.user_id, ud.name, ud.role, dm.dist_id, ud.mobile_number, ud.status
+$select_sql = "SELECT dm.user_id, ud.name, ud.role,ud.mobile_number, ud.last_login, ud.status
 FROM district_user_map dm
 LEFT JOIN user_details ud ON dm.user_id = ud.id";
 
