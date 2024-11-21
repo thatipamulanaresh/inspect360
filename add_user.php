@@ -1,4 +1,5 @@
 <?php
+
 include 'connection.php';
 date_default_timezone_set('Asia/Kolkata');
 $date = date('Y-m-d H:i:s');
@@ -7,39 +8,59 @@ $date = date('Y-m-d H:i:s');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve POST data
     $name = isset($_POST['name']) ? $_POST['name'] : '';
-    $role = isset($_POST['role']) ? $_POST['role'] : '';
-    $role_id = isset($_POST['role_id']) ? $_POST['role_id'] : '';
     $mobile_number = isset($_POST['mobile_number']) ? $_POST['mobile_number'] : '';
-    $otp = isset($_POST['otp']) ? $_POST['otp'] : '';
-    $last_login = isset($_POST['last_login']) ? $_POST['last_login'] : '';
+    $role = isset($_POST['role']) ? $_POST['role'] : '';
 
     // Check if the mandatory fields are filled
-    if ($name && $role && $role_id && $mobile_number) {
-        // Check if mobile number already exists
-        $check_sql = "SELECT * FROM user_details WHERE mobile_number = '$mobile_number'";
-        $check_result = $con->query($check_sql);
+    if ($name && $mobile_number && $role) {
+        // Check if the role exists in the `user_roles` table
+        $role_query = "SELECT id, role FROM user_roles WHERE role = '$role'";
+        $role_result = $con->query($role_query);
 
-        if ($check_result->num_rows > 0) {
-            // Mobile number already exists
-            echo json_encode(["status" => "error", "message" => "Mobile number already exists"]);
-        } else {
-            // SQL query to insert the data into the table
-            $sql = "INSERT INTO user_details (name, role, role_id, mobile_number, otp, last_login)
-                    VALUES ('$name', '$role', '$role_id', '$mobile_number', '$otp', '$date')";
+        if ($role_result && $role_result->num_rows > 0) {
+            $role_data = $role_result->fetch_assoc();
+            $role_id = $role_data['id'];
 
-            if ($con->query($sql) === TRUE) {
-                echo json_encode(["status" => "success", "message" => "User added successfully"]);
+            // Check if the mobile number already exists in `user_details`
+            $check_sql = "SELECT * FROM user_details WHERE mobile_number = '$mobile_number'";
+            $check_result = $con->query($check_sql);
+
+            if ($check_result->num_rows > 0) {
+                // Mobile number already exists
+                echo json_encode(["status" => "error", "message" => "Mobile number already exists"]);
             } else {
-                echo json_encode(["status" => "error", "message" => "Error: " . $sql . "<br>" . $con->error]);
+                // Insert the new user into `user_details`
+                $sql = "
+                    INSERT INTO user_details (name, role, role_id, mobile_number, last_login)
+                    VALUES ('$name', '$role', '$role_id', '$mobile_number', '$date')
+                ";
+
+                if ($con->query($sql) === TRUE) {
+                    echo json_encode([
+                        "status" => "success",
+                        "message" => "User added successfully",
+                        "data" => [
+                            "NAME" => $name,
+                            "ROLE" => $role,
+                            "ROLE_ID" => $role_id,
+                            "MOBILE_NUMBER" => $mobile_number
+                        ]
+                    ]);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error: " . $sql . "<br>" . $con->error]);
+                }
             }
+        } else {
+            echo json_encode(["status" => "error", "message" => "Invalid role provided"]);
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Mandatory fields are missing"]);
+        echo json_encode(["status" =>   "error", "message" => "Mandatory fields are missing"]);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Invalid request method"]);
 }
 
 // Close connection
-$con->close();  
+$con->close();
+
 ?>

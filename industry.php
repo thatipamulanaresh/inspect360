@@ -1,4 +1,5 @@
 <?php
+
 include 'connection.php';
 
 $select_sql = "SELECT * FROM industry_information WHERE type_id = ('" . $_POST['type_id'] ." ') AND 
