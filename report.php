@@ -29,7 +29,7 @@ $sql = "
         districts d ON dum.dist_id = d.dist_code
     LEFT JOIN 
         inspection_assign ia ON ia.dist_id = d.dist_code WHERE 
-        ud.status = 'active'";
+        ud.status != 'deleted'";
 
 // Append WHERE clause if a role is specified
 if ($role) {

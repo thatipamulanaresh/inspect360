@@ -2,6 +2,7 @@
 
 // Include the database connection
 include 'connection.php';
+header('Content-Type: application/json');
 
 // Get POST data
 $name = $_POST['name'];
