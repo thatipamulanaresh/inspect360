@@ -14,8 +14,8 @@ $sql = "
         COUNT(ia.dist_id) AS assign, 
         SUM(
             IF(
-                (ud.role = 'rddm' AND ia.rddm_status = 'completed') OR 
-                (ud.role = 'rjdm' AND ia.rjdm_status = 'completed') OR 
+                (ud.role = 'RDDM' AND ia.rddm_status = 'completed') OR 
+                (ud.role = 'RJDM' AND ia.rjdm_status = 'completed') OR 
                 (ud.role = 'DMO' AND assign_status = 'completed'), 
                 1, 
                 0
@@ -33,7 +33,7 @@ $sql = "
 
 // Append WHERE clause if a role is specified
 if ($role) {
-    $sql .= " WHERE ud.role = '$role'";
+    $sql .= " AND WHERE ud.role = '$role'";
 }
 
 $sql .= " GROUP BY ud.name, ud.role, ud.mobile_number, d.dist_name";
