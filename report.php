@@ -1,8 +1,8 @@
 <?php
 include 'connection.php';
 
-// Get the role from POST request
-$role = isset($_POST['role']) ? $con->real_escape_string($_POST['role']) : null;
+// Get the role from POST request or use null if not set
+$role = isset($_POST['role']) ? $_POST['role'] : null;
 
 // Build the SQL query with optional role filtering
 $sql = "
@@ -28,12 +28,13 @@ $sql = "
     LEFT JOIN 
         districts d ON dum.dist_id = d.dist_code
     LEFT JOIN 
-        inspection_assign ia ON ia.dist_id = d.dist_code WHERE 
+        inspection_assign ia ON ia.dist_id = d.dist_code 
+    WHERE 
         ud.status != 'deleted'";
 
 // Append WHERE clause if a role is specified
 if ($role) {
-    $sql .= " AND WHERE ud.role = '$role'";
+    $sql .= " AND ud.role = '$role'";
 }
 
 $sql .= " GROUP BY ud.name, ud.role, ud.mobile_number, d.dist_name";
