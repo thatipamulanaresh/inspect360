@@ -45,9 +45,9 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
     $image_type = $_FILES['image']['type'];
 
     // Validate image file type (only allow jpg, png, jpeg, gif)
-    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+    $allowed_types = ['image/jpeg','image/jpg' ,'image/png'];
     if (!in_array($image_type, $allowed_types)) {
-        $missing_fields[] = 'image type is not valid (only jpg, png, gif allowed)';
+        $missing_fields[] = 'image type is not valid (only jpeg, jpg, png allowed)';
     }
 
     // Validate image size (example: max 2MB)
