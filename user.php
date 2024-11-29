@@ -1,10 +1,9 @@
 <?php
 include 'connection.php';
 
-$select_sql = "SELECT distinct dm.user_id, ud.name, ud.role, ud.mobile_number, ud.last_login, ud.status
-FROM district_user_map dm
-LEFT JOIN user_details ud ON dm.user_id = ud.id
-WHERE ud.status != 'deleted'";
+$select_sql = "SELECT distinct id, name, role, mobile_number, last_login, status
+FROM user_details 
+WHERE status != 'deleted'";
 
 $result = $con->query($select_sql);
 

@@ -9,12 +9,16 @@ $type = $_POST['data_type'];
 if($type == 'districts'){
 
     
-$select_sql = "SELECT dist_code, dist_name FROM districts WHERE status = 'active'";
+$select_sql = "SELECT dist_code, dist_name FROM districts WHERE status != 'deleted'";
 
 } else if($type == 'inspection_types'){
     
-$select_sql = "SELECT id, inspection_type FROM inspection_types WHERE status = 'active' ";
-} else {
+$select_sql = "SELECT id, inspection_type FROM inspection_types WHERE status != 'deleted' ";
+
+}else if($type == 'user_roles'){
+    
+    $select_sql = "SELECT id, role, status FROM user_roles WHERE status != 'deleted' ";
+ } else {
     echo json_encode(array(
         "status" => "False",
         "message" => "missing parameters"
