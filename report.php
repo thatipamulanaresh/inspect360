@@ -7,6 +7,7 @@ $role = isset($_POST['role']) ? $_POST['role'] : null;
 // Build the SQL query with optional role filtering
 $sql = "
     SELECT 
+        ud.id,
         ud.name, 
         ud.role, 
         ud.mobile_number, 
